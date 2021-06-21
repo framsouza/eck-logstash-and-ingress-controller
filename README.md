@@ -1,0 +1,1 @@
+# logstash-k8s-ingresscontroller
