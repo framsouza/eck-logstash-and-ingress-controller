@@ -4,7 +4,7 @@ This page will guide to configure logstash to work together with ECK and being a
 
 ### Scenario
 
-In this scenario we will assume you have read the (eck guide)[https://github.com/framsouza/eck] or e(ck saml setup)[https://github.com/framsouza/eck-saml-hot-warm-cold] in order to have an ECK & Kibana up and running.
+In this scenario we will assume you have read the [eck guide](https://github.com/framsouza/eck) or [eck saml setup](https://github.com/framsouza/eck-saml-hot-warm-cold) in order to have an ECK & Kibana up and running.
 Assuming you should have running the following resources:
 
 - ECK Elasticsearch
