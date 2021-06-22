@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: logstash-multiple-pipeline
+data:
+  logstash.yml: |-
+    http.host: "0.0.0.0"
+  pipelines.yml: |-
+    - pipeline.id: pipeline00
+      path.config: "/usr/share/logstash/pipeline/pipeline-00.config"
+    - pipeline.id: pipeline01
+      path.config: "/usr/share/logstash/pipeline/pipeline-01.config"
+  pipeline-00.config: |-
+    input { }
+    filter { }
+    output {
+      stdout {
+        codec => rubydebug
+      }
+    }
+
+  pipeline-01.config: |-
+    input {
+      beats {
+        port => 5044
+      }
+    }
+
+    output {
+      elasticsearch {
+        index => "logstash-%{[@metadata][beat]}"
+        hosts => [ "${ES_HOSTS}" ]
+        user => "${ES_USER}"
+        password => "${ES_PASSWORD}"
+        cacert => '/etc/logstash/certificates/ca.crt'
+      }
+    }

@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logstash
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: logstash
+  template:
+    metadata:
+      labels:
+        app: logstash
+    spec:
+      containers:
+      - name: logstash
+        image: docker.elastic.co/logstash/logstash:7.13.2
+        readinessProbe:
+          tcpSocket:
+            port: logstash
+          initialDelaySeconds: 40
+          periodSeconds: 15
+          successThreshold: 1
+          timeoutSeconds: 20
+        ports:
+        - containerPort: 5044
+          name: logstash
+        env:
+        - name: ES_HOSTS
+          value: "https://elastic-prd-es-http:9200"
+        - name: ES_USER
+          value: "elastic"
+        - name: ES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: elastic-prd-es-elastic-user
+              key: elastic
+        volumeMounts:
+          - name: config-volume
+            mountPath: /usr/share/logstash/config
+          - name: volume-pipeline
+            mountPath: /usr/share/logstash/pipeline
+          - name: cert-ca
+            mountPath: "/etc/logstash/certificates"
+      volumes:
+      - name: config-volume
+        configMap:
+          name: logstash-multiple-pipeline
+          items:
+            - key: logstash.yml
+              path: logstash.yml
+            - key: pipelines.yml
+              path: pipelines.yml
+      - name: volume-pipeline
+        configMap:
+          name: logstash-multiple-pipeline
+          items:
+            - key: pipeline-00.config
+              path: pipeline-00.config
+            - key: pipeline-01.config
+              path: pipeline-01.config
+      - name: cert-ca
+        secret:
+          secretName: elastic-prd-es-http-certs-public
