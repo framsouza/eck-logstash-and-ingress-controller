@@ -19,7 +19,7 @@ Here we will deploy the following resouces:
 
 ## Architecture
  
-In this scenario we are shipping Kubernetes logs using Filebeat (as part of the ECK) and sending it to a logstash deployment running on Kubernetes. Remember that until now, we do not support logstash as part of the ECK and we need to deploy it as deployment.
+In this scenario we are shipping Kubernetes logs using Filebeat (as part of the ECK) and sending it to a logstash deployment running on Kubernetes. Currently we do not support Logstash managed by ECK, and we need to deploy it as a deployment.
 
 The flow is the quite easy: filebeat -> logstash -> elasticsearch <- kibana, all of this deployed on top of Kubernetes and being accesible via Ingress Controller.
 
